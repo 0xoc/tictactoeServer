@@ -4,6 +4,7 @@
   "description": "Basic web socket server for the game tic tac toe, the unbeatable",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -17,6 +18,9 @@
   "author": "Ali Parvizi",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "save": "^2.4.0",
+    "shortid": "^2.2.15",
     "ws": "^7.2.3"
   }
 }
