@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^3.5.6",
     "save": "^2.4.0",
     "shortid": "^2.2.15",
     "ws": "^7.2.3"

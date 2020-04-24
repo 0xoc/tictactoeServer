@@ -5,8 +5,29 @@ class Game {
         this.size = size;
         this.winBy = winBy;
         this.starter = starter;
-        this.gameId = shortid.generate()
+        this.gameId = shortid.generate();
+        this.players = Array()
+    }
 
-        // todo add it to the data base
+    addPlayer(wsPlayer) {
+        if (this.players.length < 2)
+            this.players.push(wsPlayer)
+    }
+
+    removePlayer(wsPlayer) {
+        var index = this.players.indexOf(wsPlayer);
+        
+        if (index > -1)
+            this.players.splice(index, 1)
+    }
+
+    hasPlayer(wsPlayer) {
+        var index = this.players.indexOf(wsPlayer);
+        return index > -1;
     }
 };
+
+
+module.exports = {
+    Game
+}
