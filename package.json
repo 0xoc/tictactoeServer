@@ -1,0 +1,22 @@
+{
+  "name": "tictactoeserver",
+  "version": "1.0.0",
+  "description": "Basic web socket server for the game tic tac toe, the unbeatable",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tic",
+    "tac",
+    "toe;",
+    "websocket;",
+    "ai;",
+    "online"
+  ],
+  "author": "Ali Parvizi",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.2.3"
+  }
+}
