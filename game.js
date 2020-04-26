@@ -10,15 +10,15 @@ class Game {
     }
 
     addPlayer(wsPlayer) {
-        if (this.players.length < 2)
-            this.players.push(wsPlayer)
+        this.players.push(wsPlayer)
     }
 
     removePlayer(wsPlayer) {
         var index = this.players.indexOf(wsPlayer);
         
-        if (index > -1)
+        if (index > -1){
             this.players.splice(index, 1)
+        }
     }
 
     hasPlayer(wsPlayer) {

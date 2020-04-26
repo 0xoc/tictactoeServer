@@ -75,18 +75,24 @@ wss.on('connection', (ws) => {
             }));
             return;
             }
+            
 
-            var players = gameObj.players.filter((item) => {
-            return !(item == ws);
-            })
-
-            for (var i = 0; i < players.length; i++){
-            players[i].send(JSON.stringify({
-                'status': 300,
-                'gameId': gameId,
-                'move': move
-            }));
-            }
+            gameObj.players.forEach(player => {
+                if (player != ws) {
+                    if (game_data.rmode == 'move') {
+                        player.send(JSON.stringify({
+                            'status': 300,
+                            'gameId': gameId,
+                            'move': move
+                        }));
+                    } else if (game_data.rmode == 'reset') {
+                        player.send(JSON.stringify({
+                            'status': 600,
+                            'gameId': gameId,
+                        }));
+                    }
+                }
+            });
 
             console.log("[Server] Move broadcasted " + move);
 
@@ -98,10 +104,12 @@ wss.on('connection', (ws) => {
             // get the game id
             let gameId = game_data.gameId;
             let gameObj = null;
+            let rmode = game_data.rmode;
+
             
             // search for a with the given gameId
             gameObj = games.find((item)=>{
-            return item.gameId == gameId;
+                return item.gameId == gameId;
             });
 
             // if gameObj is null, then the given gameId is invalid
@@ -110,11 +118,10 @@ wss.on('connection', (ws) => {
                 'status': 404,
                 'details': "Invalid game id"
             }));
+            console.log("[Server | Error] Invalid Game ID "  + game_data.gameId );
+
             return;
             }
-            
-            // add the requesting web socket as one of the players
-            gameObj.addPlayer(ws);
 
             // notify with game information
             ws.send(JSON.stringify({
@@ -126,8 +133,24 @@ wss.on('connection', (ws) => {
                 'gameId': gameObj.gameId
             }
             }))
+            
+            // add the requesting web socket as one of the players
+            gameObj.addPlayer(ws);
 
+            if (rmode != "partial"){
+
+                // nitify other players
+                gameObj.players.forEach(player => {
+                    if (player != ws) {
+                        player.send(JSON.stringify({
+                            'status': 301 // meaning opponent joind
+                        }));
+                    }
+                });
+            }
+            
             console.log("[Server] Joined to game "  + game_data.gameId );
+
         // and invalid request type has been submitted
         } else {
             console.log("[Server | User Error] Invalid request type "  + game_data.type );
