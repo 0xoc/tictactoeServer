@@ -10,7 +10,7 @@ class Game {
     }
 
     addPlayer(wsPlayer) {
-        players.forEach(player => {
+        this.players.forEach(player => {
             if (player == wsPlayer){
                 this.removePlayer(player);
             }
