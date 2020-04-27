@@ -168,10 +168,9 @@ wss.on('connection', (ws) => {
             }
             }))
             
-            // add the requesting web socket as one of the players
-            gameObj.addPlayer(ws);
-
             if (rmode != "partial"){
+                // add the requesting web socket as one of the players
+                gameObj.addPlayer(ws);
 
                 // nitify other players
                 gameObj.players.forEach(player => {
