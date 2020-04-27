@@ -157,9 +157,17 @@ wss.on('connection', (ws) => {
             return;
             }
 
+            var statusCode;
+            
+            if (rmode == 'partial') {
+                statusCode = 199; // means only partial join
+            } else {
+                statusCode = 190; // means full join
+            }
+
             // notify with game information
             ws.send(JSON.stringify({
-            'status': 200,
+            'status': statusCode,
             'game': {
                 'size': gameObj.size,
                 'winBy': gameObj.winBy,
