@@ -17,6 +17,36 @@ function reportError(ws, msg){
 }
 
 
+function clearGame(ws, gameId) {
+    gameObj = games.find((item)=>{
+        return item.gameId == gameId;
+    });
+
+    
+    if (gameObj == null){
+        ws.send(JSON.stringify({
+            'status': 404,
+            'details': "Invalid game id"
+        }));
+        console.log("[Server | Error] Invalid Game ID "  + gameId );
+
+        return;
+    }
+
+    gameObj.players.forEach(player => {
+        if (ws != player) {
+            player.send(JSON.stringify({
+                'status': '204' // game deleted
+            }));
+        }
+        
+    });
+
+    // delete the game
+    games.splice(games.indexOf(gameObj, 1))
+
+}
+
 wss.on('connection', (ws) => {
     console.log("[Server] Accepting new connection");
 
@@ -98,34 +128,7 @@ wss.on('connection', (ws) => {
         } else if (game_data.type == "DELETE") {
             // delete a game, and notify players
             console.log("[Server] Deleting game " + game_data.gameId);
-
-            gameObj = games.find((item)=>{
-                return item.gameId == game_data.gameId;
-            });
-
-            
-            if (gameObj == null){
-                ws.send(JSON.stringify({
-                    'status': 404,
-                    'details': "Invalid game id"
-                }));
-                console.log("[Server | Error] Invalid Game ID "  + game_data.gameId );
-
-                return;
-            }
-
-            gameObj.players.forEach(player => {
-                if (ws != player) {
-                    player.send(JSON.stringify({
-                        'status': '204' // game deleted
-                    }));
-                }
-                
-            });
-
-            // delete the game
-            games.splice(games.indexOf(gameObj, 1))
-
+            clearGame(ws, game_data.gameId);
             console.log("[Server] Game deleted " + game_data.gameId)
         }
         // to join a game that has allready been created
@@ -209,17 +212,11 @@ wss.on('connection', (ws) => {
 
         for (var i  = 0; i < gameObjs.length;i++){
             var gameObj = gameObjs[i];
-
-            gameObj.removePlayer(ws);
-
-            // if the game has no players left, delete it
-            if (gameObj.players.length == 0){
-                games.splice(games.indexOf(gameObj, 1))
-                console.log("[Server] Game deleted " + gameObj.gameId);
-            }
-            console.log("[Server] Connection closed");
+            clearGame(ws, gameObj.gameId);
         }
-        
+
+        console.log("[Server] Connection closed");
+
     } catch (err) {
         console.log("[Server | Error] " + err.message );
         console.log("[Server | Error] " + err.stack);
