@@ -10,8 +10,7 @@ class Game {
     }
 
     addPlayer(wsPlayer) {
-        if (!this.hasPlayer(wsPlayer))
-            this.players.push(wsPlayer)
+        this.players.push(wsPlayer)
     }
 
     removePlayer(wsPlayer) {
