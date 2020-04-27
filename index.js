@@ -137,16 +137,17 @@ wss.on('connection', (ws) => {
             // add the requesting web socket as one of the players
             gameObj.addPlayer(ws);
 
+            if (rmode != "partial"){
 
-            // nitify other players
-            gameObj.players.forEach(player => {
-                if (player != ws) {
-                    player.send(JSON.stringify({
-                        'status': 301 // meaning opponent joind
-                    }));
-                }
-            });
-            
+                // nitify other players
+                gameObj.players.forEach(player => {
+                    if (player != ws) {
+                        player.send(JSON.stringify({
+                            'status': 301 // meaning opponent joind
+                        }));
+                    }
+                });
+            }
             
             console.log("[Server] Joined to game "  + game_data.gameId );
 
