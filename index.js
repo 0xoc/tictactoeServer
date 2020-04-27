@@ -56,7 +56,7 @@ wss.on('connection', (ws) => {
             'gameId': gameObj.gameId
             }))
             console.log("[Server] New game created with id " + gameObj.gameId);
-
+        
         } else if (game_data.type == "PUT") {
             console.log("[Server] Making new move");
 
@@ -76,7 +76,6 @@ wss.on('connection', (ws) => {
             return;
             }
             
-
             gameObj.players.forEach(player => {
                 if (player != ws) {
                     if (game_data.rmode == 'move') {
@@ -96,7 +95,39 @@ wss.on('connection', (ws) => {
 
             console.log("[Server] Move broadcasted " + move);
 
-        } 
+        } else if (game_data.type == "DELETE") {
+            // delete a game, and notify players
+            console.log("[Server] Deleting game " + game_data.gameId);
+
+            gameObj = games.find((item)=>{
+                return item.gameId == game_data.gameId;
+            });
+
+            
+            if (gameObj == null){
+                ws.send(JSON.stringify({
+                    'status': 404,
+                    'details': "Invalid game id"
+                }));
+                console.log("[Server | Error] Invalid Game ID "  + game_data.gameId );
+
+                return;
+            }
+
+            gameObj.players.forEach(player => {
+                if (ws != player) {
+                    player.send(JSON.stringify({
+                        'status': '204' // game deleted
+                    }));
+                }
+                
+            });
+
+            // delete the game
+            games.splice(games.indexOf(gameObj, 1))
+
+            console.log("[Server] Game deleted " + game_data.gameId)
+        }
         // to join a game that has allready been created
         else if (game_data.type == "JOIN"){
             console.log("[Server] Joining to game "  + game_data.gameId );
