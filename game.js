@@ -10,6 +10,11 @@ class Game {
     }
 
     addPlayer(wsPlayer) {
+        players.forEach(player => {
+            if (player == wsPlayer){
+                this.removePlayer(player);
+            }
+        });
         this.players.push(wsPlayer)
     }
 
