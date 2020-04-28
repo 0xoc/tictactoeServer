@@ -36,7 +36,7 @@ function clearGame(ws, gameId) {
     gameObj.players.forEach(player => {
         if (ws != player) {
             player.send(JSON.stringify({
-                'status': '204' // game deleted
+                'status': 204 // game deleted
             }));
         }
         
@@ -212,7 +212,6 @@ wss.on('connection', (ws) => {
         console.log("[Server] Closing connection ");
 
         try {
-        // remove the ws from game players
         var gameObjs = games.filter((item) => {
             return item.hasPlayer(ws);
         });
